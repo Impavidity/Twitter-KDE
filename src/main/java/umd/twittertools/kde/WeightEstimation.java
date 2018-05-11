@@ -48,21 +48,38 @@ public class WeightEstimation {
 	
 	public static DoubleArrayList computeFeedbackWeights(TweetSet tweetset, TweetSet feedbackSet) {
 		DoubleArrayList weights = new DoubleArrayList();
-		DoubleArrayList scoreBasedWeights = computeScoreBasedWeights(tweetset);
-		double totalScore = 0;
-		for (Tweet tweet : tweetset) {
-			if (feedbackSet.contains(tweet)) {
-				totalScore += 1.0;
-			} else {
-				totalScore += Math.pow(Math.E, tweet.getQlScore());
-			}
+//		DoubleArrayList scoreBasedWeights = computeScoreBasedWeights(tweetset);
+//		double totalScore = 0;
+//		for (Tweet tweet : tweetset) {
+//			if (feedbackSet.contains(tweet)) {
+//				totalScore += 1.0;
+//			} else {
+//				totalScore += Math.pow(Math.E, tweet.getQlScore());
+//			}
+//		}
+//
+//		for (Tweet tweet : tweetset) {
+//			if (feedbackSet.contains(tweet)) {
+//				weights.add(1.0/totalScore);
+//			} else {
+//				weights.add(Math.pow(Math.E, tweet.getQlScore())/totalScore);
+//			}
+//		}
+		double mean = 0;
+		for (Tweet tweet: tweetset) {
+			mean += tweet.getRank() * 1.0 / tweetset.size();
 		}
-		
+		double lambda = 1/mean;
+		double totalRank = 0;
+		for (Tweet tweet: tweetset) {
+			totalRank += lambda * Math.pow(Math.E, -tweet.getRank());
+		}
 		for (Tweet tweet : tweetset) {
 			if (feedbackSet.contains(tweet)) {
-				weights.add(1.0/totalScore);
+				weights.add(1.0/ totalRank);
 			} else {
-				weights.add(Math.pow(Math.E, tweet.getQlScore())/totalScore);
+				double tweetRank = lambda * Math.pow(Math.E, -tweet.getRank());
+				weights.add(tweetRank / totalRank);
 			}
 		}
 		return weights;

@@ -46,14 +46,14 @@ public class TweetSet implements Iterable<Tweet>{
 		return false;
 	}
 	
-	@Override
+	//@Override
   public Iterator<Tweet> iterator() {
     return tweets.iterator();
   }
 	
 	public void sortByQLscore() {
 		Comparator<Tweet> comparator = new Comparator<Tweet>() {
-			@Override
+			//@Override
 			public int compare(Tweet t1, Tweet t2) {
 				double diff = t1.getQlScore() - t2.getQlScore();
 				return (diff == 0) ? 0 : (diff > 0) ? -1 : 1;
@@ -64,7 +64,7 @@ public class TweetSet implements Iterable<Tweet>{
 	
 	public void sortByTMscore() {
 		Comparator<Tweet> comparator = new Comparator<Tweet>() {
-			@Override
+			//@Override
 			public int compare(Tweet t1, Tweet t2) {
 				double diff = t1.getTMScore() - t2.getTMScore();
 				return (diff == 0) ? 0 : (diff > 0) ? -1 : 1;
@@ -75,7 +75,7 @@ public class TweetSet implements Iterable<Tweet>{
 	
 	public MinMaxPriorityQueue<Tweet> topTweets(int rank) {
 		Comparator<Tweet> comparator = new Comparator<Tweet>() {
-			@Override
+			//@Override
 			public int compare(Tweet t1, Tweet t2) {
 				double diff = t1.getTMScore() - t2.getTMScore();
 				return (diff == 0) ? 0 : (diff > 0) ? -1 : 1;

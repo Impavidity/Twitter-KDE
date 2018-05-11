@@ -43,6 +43,7 @@ public class KDEModel extends Model {
 	public double[] EVAL_MAP = {0, 0, 0, 0, 0};
 	public double[] EVAL_P30 = {0, 0, 0, 0, 0};
 	private static double begin = 0, end = 1.0, stepSize = 0.01;
+	int[][] counter2qid;
 	
 	@Override
 	public void computeTMScore(TweetSet tweetSet, double lambda) {
@@ -170,13 +171,17 @@ public class KDEModel extends Model {
 		double[][] p5_per_query = new double[5][numOfquerys];
 		EVAL_MAP = new double[]{0, 0, 0, 0, 0};
 		EVAL_P30 = new double[]{0, 0, 0, 0, 0};
-		P30_ALPHA = MAP_ALPHA; //= new double[]{0.32, 0.34, 0.08, 0.44};
+		P30_ALPHA = MAP_ALPHA ;// = new double[]{0.01, 0.01, 0.01, 0.01};
+
+		counter2qid = new int[5][query2TweetSet.size()];
+
 		for (int woption = 4; woption >= 0; woption--){ // woption is weight option
 			int counter = 0;
 			for (int qid : query2TweetSet.keySet()) {
 				if (!qrels.containsRow(qid)) {
 					continue;
 				}
+				counter2qid[woption][counter] = qid;
 				if (woption == 4) { // baseline;
 					computeTMScore(query2TweetSet.get(qid), null, WeightEnum.UniformWeight, 0);
 					query2TweetSet.get(qid).sortByTMscore();
@@ -217,7 +222,7 @@ public class KDEModel extends Model {
 			String fileName = outputDir + options[woption] + ".perquery.txt";
 			BufferedWriter bw = new BufferedWriter(new FileWriter(fileName));
 			for (int qcnt = 0; qcnt < map_per_query[woption].length; qcnt++) {
-				int qid = 2 * qcnt + 1;
+				int qid = counter2qid[woption][qcnt];
 				bw.write("map " + qid +" " + map_per_query[woption][qcnt] + "\n");
 				bw.write("P_30 " + qid +" " + p30_per_query[woption][qcnt] + "\n");
 			}

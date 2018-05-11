@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -84,14 +85,19 @@ public class RunTemporalModel {
 	public void train(String searchResultFile, String qrelsFile) throws Exception {
 		Map<Integer, TweetSet> query2TweetSet = TweetSet.fromFile(searchResultFile);
 		loadGroundTruth(qrelsFile);
-		model.numOfquerys = qrels.rowKeySet().size();
+		//model.numOfquerys = qrels.rowKeySet().size();
+		model.numOfquerys = query2TweetSet.size();
+    //System.out.println(qrels.rowKeySet().size());
+    //System.out.println(query2TweetSet.size());
+    //System.exit(0);
 		model.train(query2TweetSet, qrels, numrels);
 	}
 	
 	public void test(String searchResultFile, String qrelsFile) throws Exception {
 		Map<Integer, TweetSet> query2TweetSet = TweetSet.fromFile(searchResultFile);
 		loadGroundTruth(qrelsFile);
-		model.numOfquerys = qrels.rowKeySet().size();
+		//model.numOfquerys = qrels.rowKeySet().size();
+    model.numOfquerys = query2TweetSet.size();
 		model.test(query2TweetSet, qrels, numrels);
 	}
 	
@@ -160,6 +166,14 @@ public class RunTemporalModel {
     String trainQrelsFile = cmdline.getOptionValue(TRAIN_QRELS_OPTION);
     String testInputFile = cmdline.getOptionValue(TEST_INPUT_OPTION);
     String testQrelsFile = cmdline.getOptionValue(TEST_QRELS_OPTION);
+
+    String outputPath = cmdline.getOptionValue(OUTPUT_DIR_OPTION);
+
+		File logDirectory = new File(outputPath);
+		if (!logDirectory.isDirectory()) {
+			logDirectory.mkdir();
+		}
+
     
     RunTemporalModel instance = new RunTemporalModel();
 		instance.train(trainInputFile, trainQrelsFile);
