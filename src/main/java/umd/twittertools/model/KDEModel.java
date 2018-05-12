@@ -192,7 +192,7 @@ public class KDEModel extends Model {
 		double[][] p5_per_query = new double[5][numOfquerys];
 		EVAL_MAP = new double[]{0, 0, 0, 0, 0};
 		EVAL_P30 = new double[]{0, 0, 0, 0, 0};
-		P30_ALPHA = MAP_ALPHA = new double[]{0.01, 0.01, 0.005, 0.02};
+		P30_ALPHA = MAP_ALPHA;// = new double[]{0.01, 0.01, 0.005, 0.02};
 
 		counter2qid = new int[5][query2TweetSet.size()];
 
