@@ -31,7 +31,7 @@ public class Evaluation {
 			}
 		}
 //    List<String> lines = new ArrayList<String>();
-//    Path file = Paths.get("logging/temp");
+//    Path file = Paths.get("logging/temp"+qid);
 //    for (int i = 0; i < tweetSet.size(); i++){
 //      Tweet tweet = tweetSet.getTweet(i);
 //      lines.add(Long.toString(qid) + " Q0 " + Long.toString(tweet.getId()) + " 0 " + Double.toString(tweet.getTMScore()) + " KDE");

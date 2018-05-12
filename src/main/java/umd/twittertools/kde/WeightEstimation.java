@@ -14,20 +14,22 @@ public class WeightEstimation {
 		}
 		return weights;
 	}
-	
+
 	public static DoubleArrayList computeScoreBasedWeights(TweetSet tweetset) {
 		DoubleArrayList weights = new DoubleArrayList();
 		double totalScore = 0;
 		for (Tweet tweet : tweetset) {
-			totalScore += Math.pow(Math.E, tweet.getQlScore());
+//			totalScore += Math.pow(Math.E, tweet.getQlScore());
+      totalScore += tweet.getQlScore();
 		}
 		for (Tweet tweet : tweetset) {
-			double tweetScore = Math.pow(Math.E, tweet.getQlScore());
+//			double tweetScore = Math.pow(Math.E, tweet.getQlScore());
+      double tweetScore = tweet.getQlScore();
 			weights.add(tweetScore/totalScore);
 		}
 		return weights;
 	}
-	
+
 	public static DoubleArrayList computeRankBasedWeights(TweetSet tweetset) {
 		DoubleArrayList weights = new DoubleArrayList();
 		double mean = 0;
@@ -45,7 +47,7 @@ public class WeightEstimation {
 		}
 		return weights;
 	}
-	
+
 	public static DoubleArrayList computeFeedbackWeights(TweetSet tweetset, TweetSet feedbackSet) {
 		DoubleArrayList weights = new DoubleArrayList();
 //		DoubleArrayList scoreBasedWeights = computeScoreBasedWeights(tweetset);
@@ -54,7 +56,8 @@ public class WeightEstimation {
 //			if (feedbackSet.contains(tweet)) {
 //				totalScore += 1.0;
 //			} else {
-//				totalScore += Math.pow(Math.E, tweet.getQlScore());
+//				//totalScore += Math.pow(Math.E, tweet.getQlScore());
+//        totalScore += tweet.getQlScore();
 //			}
 //		}
 //
@@ -62,7 +65,8 @@ public class WeightEstimation {
 //			if (feedbackSet.contains(tweet)) {
 //				weights.add(1.0/totalScore);
 //			} else {
-//				weights.add(Math.pow(Math.E, tweet.getQlScore())/totalScore);
+//				//weights.add(Math.pow(Math.E, tweet.getQlScore())/totalScore);
+//        weights.add(tweet.getQlScore()/totalScore);
 //			}
 //		}
 		double mean = 0;

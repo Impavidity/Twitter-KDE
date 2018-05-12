@@ -64,6 +64,10 @@ def convert(input, output):
             query_time[qid] = int(info[1])
         score = float(items[3])
         data_collection[qid].append((qid, info[0], info[1], query_time[qid] - int(info[1]), score))
+    # for qid in data_collection:
+    #     max_score = max([x[4] for x in data_collection[qid]])
+    #     min_score = min([x[4] for x in data_collection[qid]])
+    #     data_collection[qid] = [(x[0], x[1], x[2], x[3], (x[4] - min_score) / (max_score-min_score)) for x in data_collection[qid]]
     for qid in data_collection:
         data_collection[qid] = sorted(data_collection[qid], key=lambda x:x[4], reverse=True)
     for qid in sorted(data_collection.keys()):

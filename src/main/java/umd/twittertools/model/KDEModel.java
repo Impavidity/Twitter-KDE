@@ -6,6 +6,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -86,8 +90,25 @@ public class KDEModel extends Model {
 			Tweet tweet = tweetSet.getTweet(i);
 			double qlScore = tweet.getQlScore();
 			double density = densities[i];
-			double tmScore = (1-alpha) * qlScore + alpha * Math.log(density);
+			//double tmScore =  qlScore + alpha * Math.exp(density);
+			//double tmScore = (1-alpha) * qlScore + alpha * density;
+			double tmScore = qlScore + alpha * Math.log(density);
 			tweet.setTMScore(tmScore);
+		}
+		int qid = tweetSet.getQueryId();
+		if (weightOption == WeightEnum.RankBasedWeight) {
+			List<String> lines = new ArrayList<String>();
+			Path file = Paths.get("logging/temp_rankdensity"+qid);
+			for (int i = 0; i < tweetSet.size(); i++){
+				Tweet tweet = tweetSet.getTweet(i);
+
+				lines.add(Long.toString(qid) + " " + Long.toString(tweet.getId()) + " " + Double.toString(tweet.getQlScore()) + " " + Double.toString(densities[i])  );
+			}
+			try {
+				java.nio.file.Files.write(file, lines, Charset.forName("UTF-8"));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 	
@@ -171,7 +192,7 @@ public class KDEModel extends Model {
 		double[][] p5_per_query = new double[5][numOfquerys];
 		EVAL_MAP = new double[]{0, 0, 0, 0, 0};
 		EVAL_P30 = new double[]{0, 0, 0, 0, 0};
-		P30_ALPHA = MAP_ALPHA ;// = new double[]{0.01, 0.01, 0.01, 0.01};
+		P30_ALPHA = MAP_ALPHA = new double[]{0.01, 0.01, 0.01, 0.01};
 
 		counter2qid = new int[5][query2TweetSet.size()];
 
@@ -195,6 +216,15 @@ public class KDEModel extends Model {
 					map_per_query[woption][counter] = Evaluation.MAP(qid, query2TweetSet.get(qid), qrels, numrels);
 					p30_per_query[woption][counter] = Evaluation.P_RANK(qid, query2TweetSet.get(qid), qrels, 30);
 					p5_per_query[woption][counter] = Evaluation.P_RANK(qid, query2TweetSet.get(qid), qrels, 5);
+					if (woption == 2) {
+						List<String> lines = new ArrayList<String>();
+						Path file = Paths.get("logging/temp"+qid);
+						for (int i = 0; i < query2TweetSet.get(qid).size(); i++){
+							Tweet tweet = query2TweetSet.get(qid).getTweet(i);
+							lines.add(Long.toString(qid) + " " + Long.toString(tweet.getId()) + " " + Double.toString(tweet.getTMScore()) + " " + qrels.contains(qid, tweet.getId()));
+						}
+						java.nio.file.Files.write(file, lines, Charset.forName("UTF-8"));
+					}
 				}
 				EVAL_MAP[woption] += map_per_query[woption][counter];
 				EVAL_P30[woption] += p30_per_query[woption][counter];
