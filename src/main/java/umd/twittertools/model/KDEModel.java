@@ -95,21 +95,21 @@ public class KDEModel extends Model {
 			double tmScore = qlScore + alpha * Math.log(density);
 			tweet.setTMScore(tmScore);
 		}
-		int qid = tweetSet.getQueryId();
-		if (weightOption == WeightEnum.RankBasedWeight) {
-			List<String> lines = new ArrayList<String>();
-			Path file = Paths.get("logging/temp_rankdensity"+qid);
-			for (int i = 0; i < tweetSet.size(); i++){
-				Tweet tweet = tweetSet.getTweet(i);
-
-				lines.add(Long.toString(qid) + " " + Long.toString(tweet.getId()) + " " + Double.toString(tweet.getQlScore()) + " " + Double.toString(densities[i])  );
-			}
-			try {
-				java.nio.file.Files.write(file, lines, Charset.forName("UTF-8"));
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
+//		int qid = tweetSet.getQueryId();
+//		if (weightOption == WeightEnum.RankBasedWeight) {
+//			List<String> lines = new ArrayList<String>();
+//			Path file = Paths.get("logging/temp_rankdensity"+qid);
+//			for (int i = 0; i < tweetSet.size(); i++){
+//				Tweet tweet = tweetSet.getTweet(i);
+//
+//				lines.add(Long.toString(qid) + " " + Long.toString(tweet.getId()) + " " + Double.toString(tweet.getQlScore()) + " " + Double.toString(densities[i])  );
+//			}
+//			try {
+//				java.nio.file.Files.write(file, lines, Charset.forName("UTF-8"));
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//			}
+//		}
 	}
 	
 	@Override
@@ -216,15 +216,15 @@ public class KDEModel extends Model {
 					map_per_query[woption][counter] = Evaluation.MAP(qid, query2TweetSet.get(qid), qrels, numrels);
 					p30_per_query[woption][counter] = Evaluation.P_RANK(qid, query2TweetSet.get(qid), qrels, 30);
 					p5_per_query[woption][counter] = Evaluation.P_RANK(qid, query2TweetSet.get(qid), qrels, 5);
-					if (woption == 2) {
-						List<String> lines = new ArrayList<String>();
-						Path file = Paths.get("logging/temp"+qid);
-						for (int i = 0; i < query2TweetSet.get(qid).size(); i++){
-							Tweet tweet = query2TweetSet.get(qid).getTweet(i);
-							lines.add(Long.toString(qid) + " " + Long.toString(tweet.getId()) + " " + Double.toString(tweet.getTMScore()) + " " + qrels.contains(qid, tweet.getId()));
-						}
-						java.nio.file.Files.write(file, lines, Charset.forName("UTF-8"));
+
+					List<String> lines = new ArrayList<String>();
+					Path file = Paths.get("logging/temp_"+woption+"_"+qid);
+					for (int i = 0; i < query2TweetSet.get(qid).size(); i++){
+						Tweet tweet = query2TweetSet.get(qid).getTweet(i);
+						lines.add(Long.toString(qid) + " " + Long.toString(tweet.getId()) + " Q0 " + Double.toString(tweet.getTMScore()) + " 0 " + qrels.contains(qid, tweet.getId())+" KDE");
 					}
+					java.nio.file.Files.write(file, lines, Charset.forName("UTF-8"));
+
 				}
 				EVAL_MAP[woption] += map_per_query[woption][counter];
 				EVAL_P30[woption] += p30_per_query[woption][counter];
