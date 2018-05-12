@@ -1,6 +1,7 @@
 import argparse
 from collections import defaultdict
 import re
+from scipy import stats
 
 idx_collect = defaultdict(list)
 
@@ -51,6 +52,9 @@ def convert_ql(input, output):
     fout.flush()
     fout.close()
 
+def get_rank(x):
+    return x // 5
+
 def convert(input, output):
     fin = open(input)
     fout = open(output, "w")
@@ -68,11 +72,15 @@ def convert(input, output):
     #     max_score = max([x[4] for x in data_collection[qid]])
     #     min_score = min([x[4] for x in data_collection[qid]])
     #     data_collection[qid] = [(x[0], x[1], x[2], x[3], (x[4] - min_score) / (max_score-min_score)) for x in data_collection[qid]]
+    # for qid in data_collection:
+    #     scores = [x[4] for x in data_collection[qid]]
+    #     scores = stats.zscore(scores)
+    #     data_collection[qid] = [(x[0], x[1], x[2], x[3], score) for x, score in zip(data_collection[qid], scores)]
     for qid in data_collection:
         data_collection[qid] = sorted(data_collection[qid], key=lambda x:x[4], reverse=True)
     for qid in sorted(data_collection.keys()):
         for idx, items in enumerate(data_collection[qid]):
-            fout.write('{} {} {} {} {} {}\n'.format(items[0], items[1], idx+1, items[2], items[3], items[4]))
+            fout.write('{} {} {} {} {} {}\n'.format(items[0], items[1], get_rank(idx+1), items[2], items[3], items[4]))
     fout.flush()
     fout.close()
 

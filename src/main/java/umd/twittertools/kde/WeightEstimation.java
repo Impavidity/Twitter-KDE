@@ -36,13 +36,16 @@ public class WeightEstimation {
 		for (Tweet tweet: tweetset) {
 			mean += tweet.getRank() * 1.0 / tweetset.size();
 		}
-		double lambda = 1/mean;
+		double lambda = 1;// 1/mean;
 		double totalRank = 0;
 		for (Tweet tweet: tweetset) {
 			totalRank += lambda * Math.pow(Math.E, -tweet.getRank());
 		}
 		for (Tweet tweet : tweetset) {
-			double tweetRank = lambda * Math.pow(Math.E, -tweet.getRank());
+		  int rank = tweet.getRank();
+      double tweetRank = lambda * Math.pow(Math.E, -tweet.getRank());
+//      if (rank < 10)
+//         tweetRank = 1;
 			weights.add(tweetRank/totalRank);
 		}
 		return weights;
@@ -73,7 +76,7 @@ public class WeightEstimation {
 		for (Tweet tweet: tweetset) {
 			mean += tweet.getRank() * 1.0 / tweetset.size();
 		}
-		double lambda = 1/mean;
+		double lambda = 1;//1/mean;
 		double totalRank = 0;
 		for (Tweet tweet: tweetset) {
 			totalRank += lambda * Math.pow(Math.E, -tweet.getRank());

@@ -46,7 +46,7 @@ public class KDEModel extends Model {
 	private static double[] P30_ALPHA = new double[4];
 	public double[] EVAL_MAP = {0, 0, 0, 0, 0};
 	public double[] EVAL_P30 = {0, 0, 0, 0, 0};
-	private static double begin = 0, end = 1.0, stepSize = 0.01;
+	private static double begin = 0, end = 0.1, stepSize = 0.002;
 	int[][] counter2qid;
 	
 	@Override
@@ -138,21 +138,21 @@ public class KDEModel extends Model {
 					p30[woption.ordinal()][iter] += Evaluation.P_RANK(qid, query2TweetSet.get(qid), qrels, 30);
 				}
 			}
-			
+
 			for (WeightEnum woption : WeightEnum.values()){
 				map[woption.ordinal()][iter] /= numOfquerys;
 				p30[woption.ordinal()][iter] /= numOfquerys;
 			}
-			
+
 			if (debug) {
-				out.println(String.format("%.3f : %.4f %.4f %.4f %.4f (MAP)", alpha, map[0][iter], 
+				out.println(String.format("%.3f : %.4f %.4f %.4f %.4f (MAP)", alpha, map[0][iter],
 					map[1][iter], map[2][iter], map[3][iter]));
-				out.println(String.format("%.3f : %.4f %.4f %.4f %.4f (P30)", alpha, p30[0][iter], 
+				out.println(String.format("%.3f : %.4f %.4f %.4f %.4f (P30)", alpha, p30[0][iter],
 						p30[1][iter], p30[2][iter], p30[3][iter]));
 			}
 			iter++;
 		}
-		
+
 		// select the ALPHAs to maximize test statistics (MAP and P30)
 		for (int woption = 0; woption <= 3; woption++) {
 			double map_avg = 0, map_max = 0;
@@ -192,7 +192,7 @@ public class KDEModel extends Model {
 		double[][] p5_per_query = new double[5][numOfquerys];
 		EVAL_MAP = new double[]{0, 0, 0, 0, 0};
 		EVAL_P30 = new double[]{0, 0, 0, 0, 0};
-		P30_ALPHA = MAP_ALPHA = new double[]{0.01, 0.01, 0.01, 0.01};
+		P30_ALPHA = MAP_ALPHA = new double[]{0.01, 0.01, 0.005, 0.02};
 
 		counter2qid = new int[5][query2TweetSet.size()];
 
