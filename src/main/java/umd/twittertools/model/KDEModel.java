@@ -218,10 +218,10 @@ public class KDEModel extends Model {
 					p5_per_query[woption][counter] = Evaluation.P_RANK(qid, query2TweetSet.get(qid), qrels, 5);
 
 					List<String> lines = new ArrayList<String>();
-					Path file = Paths.get("logging/temp_"+woption+"_"+qid);
+					Path file = Paths.get(outputDir+woption+"_"+qid);
 					for (int i = 0; i < query2TweetSet.get(qid).size(); i++){
 						Tweet tweet = query2TweetSet.get(qid).getTweet(i);
-						lines.add(Long.toString(qid) + " " + Long.toString(tweet.getId()) + " Q0 " + Double.toString(tweet.getTMScore()) + " 0 " + qrels.contains(qid, tweet.getId())+" KDE");
+						lines.add(Long.toString(qid) + " Q0 " + Long.toString(tweet.getId()) + " 0 " + Double.toString(tweet.getTMScore()) +" KDE");
 					}
 					java.nio.file.Files.write(file, lines, Charset.forName("UTF-8"));
 
