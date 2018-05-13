@@ -79,7 +79,11 @@ public class WeightEstimation {
 		double lambda = 1;//1/mean;
 		double totalRank = 0;
 		for (Tweet tweet: tweetset) {
-			totalRank += lambda * Math.pow(Math.E, -tweet.getRank());
+      if (feedbackSet.contains(tweet)) {
+        totalRank += 1;
+      } else {
+        totalRank += lambda * Math.pow(Math.E, -tweet.getRank());
+      }
 		}
 		for (Tweet tweet : tweetset) {
 			if (feedbackSet.contains(tweet)) {
