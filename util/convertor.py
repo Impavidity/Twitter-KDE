@@ -53,7 +53,7 @@ def convert_ql(input, output):
     fout.close()
 
 def get_rank(x):
-    return x // 5
+    return x // 5 * 5
 
 def convert(input, output):
     fin = open(input)
