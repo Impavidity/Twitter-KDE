@@ -43,9 +43,9 @@ public class WeightEstimation {
 		}
 		for (Tweet tweet : tweetset) {
 		  int rank = tweet.getRank();
-      double tweetRank = lambda * Math.pow(Math.E, -tweet.getRank());
-//      if (rank < 10)
-//         tweetRank = 1;
+      double tweetRank = lambda * Math.pow(Math.E, -tweet.getRank() * 1.0 / 5.0);
+//      if (rank < 30)
+//         tweetRank =1;
 			weights.add(tweetRank/totalRank);
 		}
 		return weights;
